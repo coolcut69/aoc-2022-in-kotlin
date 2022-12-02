@@ -1,45 +1,38 @@
+import java.io.File
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        var max = 0
-        var sum = 0
-        for (s in input) {
-            if (s != "") {
-                sum += s.toInt()
-            } else {
-                if (sum > max) {
-                    max = sum
-                }
-                sum = 0
-            }
+
+    fun parseInput(input: String) = input
+        .split("\n\n")
+        .map { elf ->
+            elf.lines().filter { it != "" }.map { it.toInt() }
         }
-        return max
+
+    fun List<List<Int>>.topNElves(n: Int): Int {
+        return map { it.sum() }
+            .sortedDescending()
+            .take(n)
+            .sum()
     }
 
-    fun part2(input: List<String>): Int {
-        val sums: MutableList<Int> = ArrayList()
-
-        var sum = 0
-        for (s in input) {
-            if (s != "") {
-                sum += s.toInt()
-            } else {
-                sums.add(sum)
-                sum = 0
-            }
-        }
-        sums.add(sum)
-
-        sums.sort()
-        sums.reverse()
-        return sums.subList(0, 3).sum()
+    fun part1(input: String): Int {
+        val data = parseInput(input)
+        return data.topNElves(1)
     }
+
+    fun part2(input: String): Int {
+        val data = parseInput(input)
+        return data.topNElves(3)
+    }
+
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
+    val testInput = File("src/Day01_test.txt").readText()
+
     check(part1(testInput) == 24000)
     check(part2(testInput) == 45000)
 
-    val input = readInput("Day01")
+    val input = File("src/Day01.txt").readText()
     println(part1(input))
     println(part2(input))
 }
