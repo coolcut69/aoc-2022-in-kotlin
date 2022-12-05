@@ -1,24 +1,27 @@
-import kotlin.collections.ArrayDeque
-
 fun main() {
 
+    fun parseAction(actionString: String): Action {
+        val fromPosition = actionString.indexOf("from")
+        val movePosition = actionString.indexOf("move")
+        val toPosition = actionString.indexOf("to")
+
+        val numberOfCrates = actionString.substring(movePosition + 5, fromPosition - 1).toInt()
+        val source = actionString.substring(fromPosition + 5, toPosition - 1).toInt()
+        val destination = actionString.substring(toPosition + 3).toInt()
+        return Action(numberOfCrates, source, destination)
+    }
+
     fun part1(inputs: List<String>, stacks: MutableMap<Int, ArrayDeque<String>>): String {
-        for (action in inputs) {
-            val fromPosition = action.indexOf("from")
-            val movePosition = action.indexOf("move")
-            val toPosition = action.indexOf("to")
+        for (actionString in inputs) {
 
-            val numberOfCrates = action.substring(movePosition + 5, fromPosition - 1).toInt()
-            val source = action.substring(fromPosition + 5, toPosition -1).toInt()
-            val destination = action.substring(toPosition + 3).toInt()
+            val action = parseAction(actionString)
 
-            val sourceStack = stacks[source]
-            val destinationStack = stacks[destination]
+            val sourceStack = stacks[action.source]
+            val destinationStack = stacks[action.destination]
 
-            for (i in 1..numberOfCrates) {
+            repeat(action.numberOfCrates) {
                 destinationStack?.addLast(sourceStack?.removeLast()!!)
             }
-
         }
         return stacks.map { it.value.last() }.joinToString("")
     }
@@ -38,18 +41,24 @@ fun main() {
 //    check(part2(testInput, stacks) == 0)
 
     val input = readInput("Day05")
-    stacks[1] = ArrayDeque(listOf("T","D","W","Z","V","P"))
-    stacks[2] = ArrayDeque(listOf("L","S","W","V","F","J","D"))
-    stacks[3] = ArrayDeque(listOf("Z","M","L","S","V","T","B","H"))
-    stacks[4] = ArrayDeque(listOf("R","S","J"))
-    stacks[5] = ArrayDeque(listOf("C","Z","B","G","F","M","L","W"))
-    stacks[6] = ArrayDeque(listOf("Q","W","V","H","Z","R","G","B"))
-    stacks[7] = ArrayDeque(listOf("V","J","P","C","B","D","N"))
-    stacks[8] = ArrayDeque(listOf("P","T","B","Q"))
-    stacks[9] = ArrayDeque(listOf("H","G","Z","R","C"))
+    stacks[1] = ArrayDeque(listOf("T", "D", "W", "Z", "V", "P"))
+    stacks[2] = ArrayDeque(listOf("L", "S", "W", "V", "F", "J", "D"))
+    stacks[3] = ArrayDeque(listOf("Z", "M", "L", "S", "V", "T", "B", "H"))
+    stacks[4] = ArrayDeque(listOf("R", "S", "J"))
+    stacks[5] = ArrayDeque(listOf("C", "Z", "B", "G", "F", "M", "L", "W"))
+    stacks[6] = ArrayDeque(listOf("Q", "W", "V", "H", "Z", "R", "G", "B"))
+    stacks[7] = ArrayDeque(listOf("V", "J", "P", "C", "B", "D", "N"))
+    stacks[8] = ArrayDeque(listOf("P", "T", "B", "Q"))
+    stacks[9] = ArrayDeque(listOf("H", "G", "Z", "R", "C"))
 
     println(part1(input, stacks))
-//    check(part1(input, stacks) == "")
+    check(part1(input, stacks) == "TLFGBZHCN")
 //    println(part2(input))
 //    check(part2(input) == 0)
 }
+
+data class Action(
+    val numberOfCrates: Int,
+    val source: Int,
+    val destination: Int
+)
