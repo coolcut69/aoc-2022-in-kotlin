@@ -13,9 +13,7 @@ fun main() {
 
     fun part1(inputs: List<String>, stacks: MutableMap<Int, ArrayDeque<String>>): String {
         for (actionString in inputs) {
-
             val action = parseAction(actionString)
-
             val sourceStack = stacks[action.source]
             val destinationStack = stacks[action.destination]
 
@@ -26,8 +24,22 @@ fun main() {
         return stacks.map { it.value.last() }.joinToString("")
     }
 
-    fun part2(inputs: List<String>): Int {
-        return 0
+    fun part2(inputs: List<String>, stacks: MutableMap<Int, ArrayDeque<String>>): String {
+        for (actionString in inputs) {
+            val action = parseAction(actionString)
+            val sourceStack = stacks[action.source]
+            val destinationStack = stacks[action.destination]
+
+            val moved = mutableListOf<String>()
+            repeat(action.numberOfCrates) {
+                sourceStack?.removeLast()?.let { it1 -> moved.add(it1) }
+            }
+            moved.reverse()
+            moved.forEach {
+                destinationStack?.addLast(it)
+            }
+        }
+        return stacks.map { it.value.last() }.joinToString("")
     }
 
     // test if implementation meets criteria from the description, like:
@@ -38,7 +50,11 @@ fun main() {
     stacks[3] = ArrayDeque(listOf("P"))
 
     check(part1(testInput, stacks) == "CMZ")
-//    check(part2(testInput, stacks) == 0)
+
+    stacks[1] = ArrayDeque(listOf("Z", "N"))
+    stacks[2] = ArrayDeque(listOf("M", "C", "D"))
+    stacks[3] = ArrayDeque(listOf("P"))
+    check(part2(testInput, stacks) == "MCD")
 
     val input = readInput("Day05")
     stacks[1] = ArrayDeque(listOf("T", "D", "W", "Z", "V", "P"))
@@ -51,10 +67,20 @@ fun main() {
     stacks[8] = ArrayDeque(listOf("P", "T", "B", "Q"))
     stacks[9] = ArrayDeque(listOf("H", "G", "Z", "R", "C"))
 
-    println(part1(input, stacks))
+//    println(part1(input, stacks))
     check(part1(input, stacks) == "TLFGBZHCN")
-//    println(part2(input))
-//    check(part2(input) == 0)
+
+    stacks[1] = ArrayDeque(listOf("T", "D", "W", "Z", "V", "P"))
+    stacks[2] = ArrayDeque(listOf("L", "S", "W", "V", "F", "J", "D"))
+    stacks[3] = ArrayDeque(listOf("Z", "M", "L", "S", "V", "T", "B", "H"))
+    stacks[4] = ArrayDeque(listOf("R", "S", "J"))
+    stacks[5] = ArrayDeque(listOf("C", "Z", "B", "G", "F", "M", "L", "W"))
+    stacks[6] = ArrayDeque(listOf("Q", "W", "V", "H", "Z", "R", "G", "B"))
+    stacks[7] = ArrayDeque(listOf("V", "J", "P", "C", "B", "D", "N"))
+    stacks[8] = ArrayDeque(listOf("P", "T", "B", "Q"))
+    stacks[9] = ArrayDeque(listOf("H", "G", "Z", "R", "C"))
+//    println(part2(input, stacks))
+    check(part2(input, stacks) == "QRQFHFWCL")
 }
 
 data class Action(
