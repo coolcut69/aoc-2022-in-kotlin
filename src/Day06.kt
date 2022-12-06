@@ -12,7 +12,15 @@ fun main() {
         return 0
     }
 
-    fun part2(inputs: List<String>): Int {
+    fun part2(input: String): Int {
+        for (i in 0..input.length - 14) {
+            val message = input.substring(i..i + 13)
+            val groupBy: Map<String, List<String>> = message.chunked(1).groupBy { it.uppercase() }
+            if (groupBy.size == 14){
+//                println(message)
+                return i + 14
+            }
+        }
         return 0
     }
 
@@ -24,14 +32,20 @@ fun main() {
     check(part1("nppdvjthqldpwncqszvftbrmjlhg") == 6)
     check(part1("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg") == 10)
     check(part1("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") == 11)
-//    check(part2(testInput) == 0)
 
-    val input = readInput("Day06")
-    println(part1(input.first()))
-//    check(part1(input) == 0)
+    check(part2("mjqjpqmgbljsphdztnvjfqwrcgsmlb") == 19)
+    check(part2("bvwbjplbgvbhsrlpgdmjqwftvncz") == 23)
+    check(part2("nppdvjthqldpwncqszvftbrmjlhg") == 23)
+    check(part2("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg") == 29)
+    check(part2("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") == 26)
 
-//    println(part2(input))
-//    check(part2(input) == 0)
+
+    val input = readInput("Day06").first()
+    println(part1(input))
+    check(part1(input) == 1080)
+
+    println(part2(input))
+    check(part2(input) == 3645)
 }
 
 
