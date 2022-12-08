@@ -29,10 +29,10 @@ fun main() {
         if (filter[0].height == tree.height) return 1
         var i = 0
         for (t in filter.reversed()) {
-            if (t.height <= tree.height){
+            if (t.height < tree.height) {
                 i++
             }
-            if (t.height == tree.height){
+            if (t.height >= tree.height) {
                 i++
                 return i
             }
@@ -45,10 +45,10 @@ fun main() {
         if (filter[0].height == tree.height) return 1
         var i = 0
         for (t in filter) {
-            if (t.height <= tree.height){
+            if (t.height < tree.height) {
                 i++
             }
-            if (t.height > tree.height){
+            if (t.height >= tree.height) {
                 i++
                 return i
             }
@@ -62,10 +62,10 @@ fun main() {
 
         var i = 0
         for (t in filter.reversed()) {
-            if (t.height <= tree.height){
+            if (t.height < tree.height) {
                 i++
             }
-            if (t.height > tree.height){
+            if (t.height >= tree.height) {
                 i++
                 return i
             }
@@ -79,10 +79,10 @@ fun main() {
 
         var i = 0
         for (t in filter) {
-            if (t.height <= tree.height){
+            if (t.height < tree.height) {
                 i++
             }
-            if (t.height > tree.height){
+            if (t.height >= tree.height) {
                 i++
                 return i
             }
@@ -153,13 +153,7 @@ fun main() {
                 scenicScores.add(scenicScore)
             }
         }
-
-         val score = scenicScoreTop(Tree(3,2,5), forest) *
-                scenicScoreLeft(Tree(3,2,5), forest) *
-                scenicScoreBottom(Tree(3,2,5), forest) *
-                scenicScoreRight(Tree(3,2,5), forest)
-
-        return score
+        return scenicScores.max()
     }
 
     // test if implementation meets criteria from the description, like:
@@ -170,8 +164,8 @@ fun main() {
     val input = readInput("Day08")
     println(part1(input))
     check(part1(input) == 1538)
-//    println(part2(input))
-//    check(part2(input) == 0)
+    println(part2(input))
+    check(part2(input) == 496125)
 }
 
 data class Tree(
