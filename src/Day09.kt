@@ -1,3 +1,4 @@
+import Direction.*
 import kotlin.math.abs
 
 fun main() {
@@ -14,23 +15,38 @@ fun main() {
     fun part1(inputs: List<String>): Int {
         val moves = moves(inputs)
         val head = Head(0, 0)
+        val tail = Tail(0, 0)
+        val allPositions: MutableSet<Position> = LinkedHashSet()
+        allPositions.add(Position(tail.x, tail.y))
 
         for (move in moves) {
-            head.move(move)
+            repeat(move.steps) {
+                head.moveDirection(move.direction)
+                if (tail.toFarFrom(head)) {
+                    tail.moveDirection(move.direction, head)
+                    allPositions.add(Position(tail.x, tail.y))
+                }
+            }
         }
-        return head.tail().positions().size
+        return allPositions.size
     }
 
     fun part2(inputs: List<String>): Int {
         val moves = moves(inputs)
-        val snake = MutableList(10) { Head(0, 0) }
-
+        val head = Head(0, 0)
+        val tail = Tail(0, 0)
+        val allPositions: MutableSet<Position> = LinkedHashSet()
+        allPositions.add(Position(tail.x, tail.y))
         for (move in moves) {
-            snake[0].move(move)
-
+            repeat(move.steps) {
+                head.moveDirection(move.direction)
+                if (tail.toFarFrom(head)) {
+                    tail.moveDirection(move.direction, head)
+                    allPositions.add(Position(tail.x, tail.y))
+                }
+            }
         }
-        return snake[0].tail().positions().size
-
+        return allPositions.size
     }
 
     // test if implementation meets criteria from the description, like:
@@ -48,75 +64,31 @@ fun main() {
 data class Move(val direction: Direction, val steps: Int)
 
 data class Head(var x: Int, var y: Int) {
-
-    private val tail = Tail(0, 0)
-
-    fun tail(): Tail {
-        return this.tail
-    }
-
-    fun move(move: Move) {
-        when (move.direction) {
-            Direction.RIGHT -> {
-                repeat(move.steps) {
-                    x++
-                    if (tail.toFarFromHead(x, y)) {
-                        tail.moveTo(this.x - 1, this.y)
-                    }
-                }
-            }
-
-            Direction.UP -> {
-                repeat(move.steps) {
-                    y++
-                    if (tail.toFarFromHead(x, y)) {
-                        tail.moveTo(this.x, this.y - 1)
-                    }
-                }
-            }
-
-            Direction.LEFT -> {
-                repeat(move.steps) {
-                    x--
-                    if (tail.toFarFromHead(x, y)) {
-                        tail.moveTo(this.x + 1, this.y)
-                    }
-                }
-            }
-
-            Direction.DOWN -> {
-                repeat(move.steps) {
-                    y--
-                    if (tail.toFarFromHead(x, y)) {
-                        tail.moveTo(this.x, this.y + 1)
-                    }
-                }
-            }
+    fun moveDirection(direction: Direction) {
+        when (direction) {
+            RIGHT -> x++
+            UP -> y++
+            LEFT -> x--
+            DOWN -> y--
         }
     }
 }
 
 data class Tail(var x: Int, var y: Int) {
-    private val allPositions: MutableSet<Position> = LinkedHashSet()
-
-    fun positions(): MutableSet<Position> {
-        return this.allPositions
-    }
-
-    fun toFarFromHead(x: Int, y: Int): Boolean {
-        return (abs(x - this.x) > 1 || abs(y - this.y) > 1)
-    }
-
-    init {
-        x = 0
-        y = 0
-        this.allPositions.add(Position(this.x, this.y))
-    }
-
-    fun moveTo(x: Int, y: Int) {
+    private fun moveTo(x: Int, y: Int) {
         this.x = x
         this.y = y
-        this.allPositions.add(Position(this.x, this.y))
+    }
+
+    fun toFarFrom(head: Head): Boolean {
+        return (abs(head.x - this.x) > 1 || abs(head.y - this.y) > 1)
+    }
+
+    fun moveDirection(direction: Direction, head: Head) = when (direction) {
+        RIGHT -> moveTo(head.x - 1, head.y)
+        UP -> moveTo(head.x, head.y - 1)
+        LEFT -> moveTo(head.x + 1, head.y)
+        DOWN -> moveTo(head.x, head.y + 1)
     }
 }
 
