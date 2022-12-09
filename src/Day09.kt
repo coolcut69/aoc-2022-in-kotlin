@@ -1,14 +1,20 @@
 import kotlin.math.abs
 
 fun main() {
-    fun part1(inputs: List<String>): Int {
+    fun moves(inputs: List<String>): List<Move> {
         val moves = inputs.map {
             Move(
                 Direction.getDirectionBy(it.split(" ")[0]),
                 it.split(" ")[1].toInt()
             )
         }
+        return moves
+    }
+
+    fun part1(inputs: List<String>): Int {
+        val moves = moves(inputs)
         val head = Head(0, 0)
+
         for (move in moves) {
             head.move(move)
         }
@@ -16,13 +22,21 @@ fun main() {
     }
 
     fun part2(inputs: List<String>): Int {
-        return 0
+        val moves = moves(inputs)
+        val snake = MutableList(10) { Head(0, 0) }
+
+        for (move in moves) {
+            snake[0].move(move)
+
+        }
+        return snake[0].tail().positions().size
+
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day09_test")
     check(part1(testInput) == 13)
-//    check(part2(testInput) == 0)
+    check(part2(testInput) == 13)
 
     val input = readInput("Day09")
 //    println(part1(input))
