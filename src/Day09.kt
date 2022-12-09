@@ -2,17 +2,17 @@ import kotlin.math.abs
 
 fun main() {
     fun part1(inputs: List<String>): Int {
-        val head = Head(0, 0)
-
-        for (move in inputs) {
-            head.move(
-                Direction.getDirectionBy(move.split(" ")[0]),
-                move.split(" ")[1].toInt()
+        val moves = inputs.map {
+            Move(
+                Direction.getDirectionBy(it.split(" ")[0]),
+                it.split(" ")[1].toInt()
             )
         }
-        val allPositions = head.tail().positions()
-
-        return allPositions.size
+        val head = Head(0, 0)
+        for (move in moves) {
+            head.move(move)
+        }
+        return head.tail().positions().size
     }
 
     fun part2(inputs: List<String>): Int {
@@ -31,6 +31,8 @@ fun main() {
 //    check(part2(input) == 0)
 }
 
+data class Move(val direction: Direction, val steps: Int)
+
 data class Head(var x: Int, var y: Int) {
 
     private val tail = Tail(0, 0)
@@ -39,10 +41,10 @@ data class Head(var x: Int, var y: Int) {
         return this.tail
     }
 
-    fun move(direction: Direction, steps: Int) {
-        when (direction) {
+    fun move(move: Move) {
+        when (move.direction) {
             Direction.RIGHT -> {
-                repeat(steps) {
+                repeat(move.steps) {
                     x++
                     if (tail.toFarFromHead(x, y)) {
                         tail.moveTo(this.x - 1, this.y)
@@ -51,7 +53,7 @@ data class Head(var x: Int, var y: Int) {
             }
 
             Direction.UP -> {
-                repeat(steps) {
+                repeat(move.steps) {
                     y++
                     if (tail.toFarFromHead(x, y)) {
                         tail.moveTo(this.x, this.y - 1)
@@ -60,7 +62,7 @@ data class Head(var x: Int, var y: Int) {
             }
 
             Direction.LEFT -> {
-                repeat(steps) {
+                repeat(move.steps) {
                     x--
                     if (tail.toFarFromHead(x, y)) {
                         tail.moveTo(this.x + 1, this.y)
@@ -69,7 +71,7 @@ data class Head(var x: Int, var y: Int) {
             }
 
             Direction.DOWN -> {
-                repeat(steps) {
+                repeat(move.steps) {
                     y--
                     if (tail.toFarFromHead(x, y)) {
                         tail.moveTo(this.x, this.y + 1)
