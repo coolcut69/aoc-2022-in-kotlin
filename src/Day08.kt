@@ -1,25 +1,25 @@
 fun main() {
 
     fun visibleFromTop(tree: Tree, trees: MutableList<Tree>): Boolean {
-        val filter = trees.filter { top -> tree.y == top.y && tree.x > top.x }
+        val filter = trees.filter { tree.x > it.x && tree.y == it.y }
         val maxOf = filter.maxOf { it.height }
         return tree.height > maxOf
     }
 
     fun visibleFromBottom(tree: Tree, trees: MutableList<Tree>): Boolean {
-        val filter = trees.filter { bottom -> tree.y == bottom.y && tree.x < bottom.x }
+        val filter = trees.filter { tree.x < it.x && tree.y == it.y }
         val maxOf = filter.maxOf { it.height }
         return tree.height > maxOf
     }
 
     fun visibleFromLeft(tree: Tree, trees: MutableList<Tree>): Boolean {
-        val filter = trees.filter { left -> tree.x == left.x && tree.y > left.y }
+        val filter = trees.filter { tree.x == it.x && tree.y > it.y }
         val maxOf = filter.maxOf { it.height }
         return tree.height > maxOf
     }
 
     fun visibleFromRight(tree: Tree, trees: MutableList<Tree>): Boolean {
-        val filter = trees.filter { right -> tree.x == right.x && tree.y < right.y }
+        val filter = trees.filter { tree.x == it.x && tree.y < it.y }
         val maxOf = filter.maxOf { it.height }
         return tree.height > maxOf
     }
@@ -162,9 +162,9 @@ fun main() {
     check(part2(testInput) == 8)
 
     val input = readInput("Day08")
-    println(part1(input))
+//    println(part1(input))
     check(part1(input) == 1538)
-    println(part2(input))
+//    println(part2(input))
     check(part2(input) == 496125)
 }
 
