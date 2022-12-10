@@ -33,15 +33,15 @@ fun main() {
 
     fun part2(inputs: List<String>): Int {
         val moves = moves(inputs)
-        val head = Head(0, 0)
         val tail = Tail(0, 0)
+        val snake = MutableList(10) { Head(0, 0) }
         val allPositions: MutableSet<Position> = LinkedHashSet()
         allPositions.add(Position(tail.x, tail.y))
         for (move in moves) {
             repeat(move.steps) {
-                head.moveDirection(move.direction)
-                if (tail.toFarFrom(head)) {
-                    tail.moveDirection(move.direction, head)
+                snake[0].moveDirection(move.direction)
+                if (tail.toFarFrom(snake[0])) {
+                    tail.moveDirection(move.direction, snake[0])
                     allPositions.add(Position(tail.x, tail.y))
                 }
             }
