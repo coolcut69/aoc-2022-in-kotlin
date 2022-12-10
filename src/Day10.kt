@@ -4,9 +4,9 @@ fun main() {
         val register = Register()
         for (s in inputs) {
             if (s == "noop") {
-                register.addIntruction(Instruction("noop", 0))
+                register.addInstruction(Instruction("noop", 0))
             } else {
-                register.addIntruction(Instruction("addx", s.split(" ")[1].toInt()))
+                register.addInstruction(Instruction("addx", s.split(" ")[1].toInt()))
             }
         }
         return register
@@ -15,19 +15,17 @@ fun main() {
     fun part1(inputs: List<String>): Int {
         val register = createRegister(inputs)
 
-        return register.valueAt(20) * 20 +
-                register.valueAt(60) * 60 +
-                register.valueAt(100) * 100 +
-                register.valueAt(140) * 140 +
-                register.valueAt(180) * 180 +
-                register.valueAt(220) * 220
-
+        val signalStrengths: MutableList<Int> = ArrayList()
+        for (i in 20..220 step 40) {
+            signalStrengths.add(register.valueAt(i) * i)
+        }
+        return signalStrengths.sum()
     }
 
     fun part2(inputs: List<String>): Int {
         val register = createRegister(inputs)
 
-        for (i in 0..200 step 40) {
+        for (i in 0..220 step 40) {
             var display = ""
             for (cycle in i..i + 39) {
                 val valueAt = register.valueAt(cycle + 1)
@@ -54,7 +52,7 @@ fun main() {
 //    check(part2(input) == 0)
 }
 
-class Register() {
+class Register {
     private val instructions: MutableList<Instruction> = ArrayList()
     private val registerX: MutableList<Int> = ArrayList()
 
@@ -62,15 +60,11 @@ class Register() {
         registerX.add(1)
     }
 
-    fun xValue(): List<Int> {
-        return registerX
-    }
-
     fun valueAt(pos: Int): Int {
         return registerX.subList(0, pos).sum()
     }
 
-    fun addIntruction(instruction: Instruction) {
+    fun addInstruction(instruction: Instruction) {
         this.instructions.add(instruction)
 
         if (instruction.action == "noop") {
