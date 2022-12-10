@@ -25,18 +25,32 @@ fun main() {
     }
 
     fun part2(inputs: List<String>): Int {
+        val register = createRegister(inputs)
+
+        for (i in 0..200 step 40) {
+            var display = ""
+            for (cycle in i..i + 39) {
+                val valueAt = register.valueAt(cycle + 1)
+                if (cycle - i == valueAt || cycle - i == valueAt + 1 || cycle - i == valueAt - 1) {
+                    display += "#"
+                } else {
+                    display += "."
+                }
+            }
+            println(display)
+        }
         return 0
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day10_test")
     check(part1(testInput) == 13140)
-//    check(part2(testInput) == 0)
+    check(part2(testInput) == 0)
 
     val input = readInput("Day10")
 //    println(part1(input))
     check(part1(input) == 15680)
-//    println(part2(input))
+    println(part2(input))
 //    check(part2(input) == 0)
 }
 
@@ -68,7 +82,4 @@ class Register() {
     }
 }
 
-data class Instruction(val action: String, val number: Int) {
-
-
-}
+data class Instruction(val action: String, val number: Int)
