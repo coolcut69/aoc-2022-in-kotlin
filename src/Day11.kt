@@ -1,29 +1,39 @@
 import java.math.BigInteger
 
 fun main() {
-    fun extracted(inputs: List<String>, borredFactor: Int = 3): List<Monkey> {
+    fun extracted(inputs: List<String>, boredFactor: Int = 3): List<Monkey> {
         val monkeys: MutableList<Monkey> = ArrayList()
 
         for (i in 0..inputs.size / 7) {
             val monkeyId = i * 7
             val numbers: List<String> = inputs[monkeyId + 1].substringAfter("Starting items: ").split(", ")
             val operation = inputs[monkeyId + 2].substringAfter("Operation: new = ")
-            val divid = inputs[monkeyId + 3].substringAfter("Test: divisible by ").toInt()
+            val divide = inputs[monkeyId + 3].substringAfter("Test: divisible by ").toInt()
             val trueMonkey = inputs[monkeyId + 4].substringAfter("If true: throw to monkey ").toInt()
             val falseMonkey = inputs[monkeyId + 5].substringAfter("If false: throw to monkey ").toInt()
             monkeys.add(
                 Monkey(
-                    divid,
+                    divide,
                     trueMonkey,
                     falseMonkey,
                     numbers.map { it.toLong() }.toMutableList(),
                     operation,
-                    borredFactor
+                    boredFactor
                 )
             )
         }
         return monkeys
     }
+
+    fun magicNumber(inputs: List<String>): Int {
+        var magicNumber = 1;
+        for (i in 0..inputs.size / 7) {
+            val monkeyId = i * 7
+            magicNumber *= inputs[monkeyId + 3].substringAfter("Test: divisible by ").toInt()
+        }
+        return magicNumber
+    }
+
 
     fun part1(inputs: List<String>, magicNumber: Int): Long {
         val monkeys = extracted(inputs)
@@ -59,14 +69,14 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day11_test")
-    check(part1(testInput, 96577) == 10605L)
-    check(part2(testInput, 96577) == BigInteger.valueOf(2713310158L))
+    check(part1(testInput, magicNumber(testInput)) == 10605L)
+    check(part2(testInput, magicNumber(testInput)) == BigInteger.valueOf(2713310158L))
 
     val input = readInput("Day11")
-    println(part1(input, 9699690))
-    check(part1(input, 9699690) == 66124L)
-    println(part2(input, 9699690))
-    check(part2(input, 9699690) == BigInteger.valueOf(19309892877L))
+    println(part1(input, magicNumber(input)))
+    check(part1(input, magicNumber(input)) == 66124L)
+    println(part2(input, magicNumber(input)))
+    check(part2(input, magicNumber(input)) == BigInteger.valueOf(19309892877L))
 }
 
 data class Monkey(
@@ -102,22 +112,22 @@ data class Monkey(
         return inspections
     }
 
-    fun applyOperation(old: Long): Long {
+    private fun applyOperation(old: Long): Long {
         val s = operation.substringAfter("old ")
         val op = s.split(" ")[0]
         val otherValue = s.split(" ")[1]
-        when (op) {
-            "+" -> return old + getOldValue(old, otherValue)
-            "*" -> return old * getOldValue(old, otherValue)
+        return when (op) {
+            "+" -> old + getOldValue(old, otherValue)
+            "*" -> old * getOldValue(old, otherValue)
             else -> throw IllegalArgumentException("unknown operator")
         }
     }
 
-    fun getOldValue(old: Long, other: String): Long {
-        if (other.equals("old")) {
-            return old
+    private fun getOldValue(old: Long, other: String): Long {
+        return if (other == "old") {
+            old
         } else {
-            return other.toLong()
+            other.toLong()
         }
     }
 
@@ -128,3 +138,5 @@ data class Monkey(
 }
 
 data class Pass(val monkey: Int, val level: Long)
+
+
