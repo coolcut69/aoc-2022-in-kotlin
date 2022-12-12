@@ -1,5 +1,5 @@
 fun main() {
-    fun parrseFileSystem(inputs: List<String>): Directory {
+    fun parseFileSystem(inputs: List<String>): Directory {
         val rootDirectory = Directory("/", null)
         var currentDir = rootDirectory
         for (action in inputs) {
@@ -32,26 +32,26 @@ fun main() {
     }
 
     fun part1(inputs: List<String>): Int {
-        val rootDirectory = parrseFileSystem(inputs)
-        return rootDirectory.getDirectories(false).filter { it.getSize() <= 100000 }.sumOf { it.getSize() }
+        val rootDirectory = parseFileSystem(inputs)
+        return rootDirectory.getDirectories(false).filter { it.getSize() <= 10_0000 }.sumOf { it.getSize() }
     }
 
     fun part2(inputs: List<String>): Int {
-        val rootDirectory = parrseFileSystem(inputs)
-        val requiredDiskspace = 30000000 - (70000000 - rootDirectory.getSize())
+        val rootDirectory = parseFileSystem(inputs)
+        val requiredDiskspace = 30_000_000 - (70_000_000 - rootDirectory.getSize())
         return rootDirectory.getDirectories(true).filter { it.getSize() > requiredDiskspace }.minOf { it.getSize() }
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day07_test")
-    check(part1(testInput) == 95437)
-    check(part2(testInput) == 24933642)
+    check(part1(testInput) == 95_437)
+    check(part2(testInput) == 24_933_642)
 
     val input = readInput("Day07")
 //    println(part1(input))
-    check(part1(input) == 1723892)
+    check(part1(input) == 1_723_892)
 //    println(part2(input))
-    check(part2(input) == 8474158)
+    check(part2(input) == 8_474_158)
 }
 
 data class Directory(val name: String, val parent: Directory?) {
